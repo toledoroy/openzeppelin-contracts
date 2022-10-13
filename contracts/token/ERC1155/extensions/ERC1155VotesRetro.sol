@@ -21,14 +21,11 @@ abstract contract ERC1155VotesRetro is ERC1155, Votes {
     // List participating tokens & their power
     mapping(uint256 => uint256) private _tokenPower;
 
-
-
-
     /// THIS FUNCTION IS FOR DEMO PURPOSES ONLY AND SHOULD BE PROTECTED
     function setTokenPower(uint256 tokenId, uint256 power) public {
         return _setTokenPower(tokenId, power);
     }
-    
+
     /**
      * Set token power & add to participating tokens list
      */
@@ -49,10 +46,7 @@ abstract contract ERC1155VotesRetro is ERC1155, Votes {
             // Update delegation for all current owners
             _afterTokenTransfer(_msgSender(), address(0), to, ids, amounts);
         */
-
-    } 
-
-
+    }
 
     /**
      * @dev Calculate the voting power of each token
@@ -71,7 +65,7 @@ abstract contract ERC1155VotesRetro is ERC1155, Votes {
             uint256 tokenId = participatingTokens[i];
             uint256 amount = balanceOf(account, tokenId);
             // Multiply by token's power
-            if(amount > 0) total += (amount * powerOfToken(tokenId));
+            if (amount > 0) total += (amount * powerOfToken(tokenId));
         }
     }
 
@@ -88,56 +82,10 @@ abstract contract ERC1155VotesRetro is ERC1155, Votes {
     ) internal virtual override {
         for (uint256 i = 0; i < ids.length; ++i) {
             uint256 power = powerOfToken(ids[i]);
-            if(power > 0){
+            if (power > 0) {
                 _transferVotingUnits(from, to, power * amounts[i]);
             }
         }
         super._afterTokenTransfer(operator, from, to, ids, amounts, data);
     }
-
-/* INHERITED
-    // Track the current undelegated balance for each account.
-    // this allows to support different voting power for different tokens
-    mapping(address => uint256) private _unitsBalance;
-
-
-    /**
-     * @dev Adjusts votes when tokens are transferred.
-     * /
-    function _afterTokenTransfer(
-        address operator,
-        address from,
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
-    ) internal virtual override {
-        for (uint256 i = 0; i < ids.length; ++i) {
-            uint256 id = ids[i];
-            uint256 amount = amounts[i];
-            _transferVotingUnits(from, to, powerOfToken(id) * amount);
-        }
-        super._afterTokenTransfer(operator, from, to, ids, amounts, data);
-    }
-
-    /**
-     * @dev Track all power-adjusted balances
-     * /
-    function _transferVotingUnits(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual override {
-        if (from != address(0)) {
-            //Units Removed
-            _unitsBalance[from] = _unitsBalance[from] - amount;
-        }
-        if (to != address(0)) {
-            //Units Added
-            _unitsBalance[to] = _unitsBalance[to] + amount;
-        }
-        super._transferVotingUnits(from, to, amount);
-    }
-
-*/
 }

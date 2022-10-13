@@ -71,5 +71,4 @@ abstract contract ERC1155VotesNF is ERC1155, Votes {
         }
         super._transferVotingUnits(from, to, amount);
     }
-
 }
